@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, typecheck, unit tests, offline eval
+    runs-on: ubuntu-latest
+    env:
+      LLM_PROVIDER: mock
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Lint (ESLint + Prettier)
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit, contract and safety tests
+        run: npm test
+      - name: Offline eval with quality gates (mock provider)
+        run: npm run eval
+      - name: Add eval report to the job summary
+        if: always()
+        run: test -f reports/eval-report.md && cat reports/eval-report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: eval-report-mock
+          path: reports/
+          if-no-files-found: warn
+
+  e2e:
+    name: Playwright E2E (demo UI, mock provider)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          CI: "true"
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report/

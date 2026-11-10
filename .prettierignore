@@ -1,0 +1,8 @@
+node_modules
+reports
+playwright-report
+test-results
+coverage
+package-lock.json
+data/
+docs/sample-report.md

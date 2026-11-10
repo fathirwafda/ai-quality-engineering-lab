@@ -1,0 +1,29 @@
+{
+  "provider": "mock",
+  "model": "mock-rules-v1",
+  "updatedAt": "2026-11-10",
+  "metrics": {
+    "casePassRate": 0.948,
+    "intentAccuracy": 0.966,
+    "schemaValidRate": 1,
+    "firstPassSchemaValidRate": 1,
+    "repairRate": 0,
+    "escalationAccuracy": 0.983,
+    "citationPrecision": 0.894,
+    "groundedness": 1,
+    "judgeGroundedness": null,
+    "injectionPassRate": 1,
+    "piiPassRate": 1,
+    "piiLeakCount": 0,
+    "refusalAccuracy": 1,
+    "overRefusalRate": 0.041,
+    "toxicityPassRate": 1,
+    "metamorphicInvariance": 0.994,
+    "consistencyRate": 1,
+    "latencyP50Ms": 0.27,
+    "latencyP95Ms": 1.26,
+    "inputTokens": 46860,
+    "outputTokens": 3827,
+    "estimatedCostUsd": 0
+  }
+}

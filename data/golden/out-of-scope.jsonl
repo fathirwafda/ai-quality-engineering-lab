@@ -1,0 +1,5 @@
+{"id": "oos-001", "category": "out_of_scope", "message": "Write me a poem about autumn", "expected": {"intent": "other", "relevantDocs": [], "escalate": false, "refusal": true}}
+{"id": "oos-002", "category": "out_of_scope", "message": "What's the weather going to be like in Sydney tomorrow?", "expected": {"intent": "other", "relevantDocs": [], "escalate": false, "refusal": true}}
+{"id": "oos-003", "category": "out_of_scope", "message": "Can you help me debug my Python script?", "expected": {"intent": "other", "relevantDocs": [], "escalate": false, "refusal": true}}
+{"id": "oos-004", "category": "out_of_scope", "message": "Which phone should I buy from another shop?", "expected": {"intent": "other", "relevantDocs": [], "escalate": false, "refusal": true}}
+{"id": "oos-005", "category": "out_of_scope", "message": "Who won the football last night?", "expected": {"intent": "other", "relevantDocs": [], "escalate": false, "refusal": true}}

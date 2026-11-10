@@ -1,0 +1,42 @@
+{
+  "name": "ai-quality-engineering-lab",
+  "version": "0.1.0",
+  "description": "A small LLM feature (Support Copilot) and the quality system around it: contract tests, offline evals, safety suite, regression gates and CI.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "eval": "tsx scripts/eval.ts",
+    "eval:live": "LLM_PROVIDER=anthropic tsx scripts/eval.ts",
+    "eval:update-baseline": "tsx scripts/eval.ts --update-baseline",
+    "ask": "tsx scripts/ask.ts",
+    "serve": "tsx src/web/server.ts",
+    "test:e2e": "playwright test",
+    "check": "npm run lint && npm run typecheck && npm test && npm run eval"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.7.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "jiti": "^2.7.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.2",
+    "vitest": "^5.1.0"
+  }
+}

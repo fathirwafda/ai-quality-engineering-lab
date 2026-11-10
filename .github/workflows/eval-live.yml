@@ -1,0 +1,60 @@
+name: Eval (live model)
+
+# Manual only: this calls the real API and costs money.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: Model id
+        required: true
+        default: claude-sonnet-5-5
+        type: choice
+        options:
+          - claude-sonnet-5-5
+          - claude-opus-5-5
+          - claude-haiku-5-5
+      judge:
+        description: Also score groundedness with an LLM judge
+        type: boolean
+        default: false
+      consistency_runs:
+        description: Repeats per consistency case
+        default: "3"
+
+permissions:
+  contents: read
+
+jobs:
+  eval-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      LLM_PROVIDER: anthropic
+      LLM_MODEL: ${{ inputs.model }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      EVAL_JUDGE: ${{ inputs.judge && '1' || '0' }}
+      EVAL_CONSISTENCY_RUNS: ${{ inputs.consistency_runs }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Check the secret is configured
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::Add an ANTHROPIC_API_KEY repository secret to run the live eval."
+            exit 1
+          fi
+      - name: Eval against the real model
+        run: npm run eval
+      - name: Add eval report to the job summary
+        if: always()
+        run: test -f reports/eval-report.md && cat reports/eval-report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: eval-report-${{ inputs.model }}
+          path: reports/
